@@ -124,8 +124,8 @@ void setor(){
 	printf ("\n                         BANK SUNIB                            |\n");
 	printf ("                                                               |\n");
 	printf ("================================================================\n");
-    printf ("                       PENYETORAN SALDO                        |\n");
-    printf ("================================================================\n");
+   	printf ("                       PENYETORAN SALDO                        |\n");
+    	printf ("================================================================\n");
 	
 	//		PENGECEKAN FILE
 	if(fp == NULL) {
@@ -201,8 +201,8 @@ void tarik(){
 	printf ("\n                         BANK SUNIB                            |\n");
 	printf ("                                                               |\n");
 	printf ("================================================================\n");
-    printf ("                       PENARIKAN SALDO                         |\n");
-    printf ("================================================================\n");
+    	printf ("                       PENARIKAN SALDO                         |\n");
+    	printf ("================================================================\n");
 	
 	//		PENGECEKAN FILE
 	if(fp == NULL) {
@@ -268,8 +268,8 @@ void print(){
 	printf ("\n                         BANK SUNIB                            |\n");
 	printf ("                                                               |\n");
 	printf ("================================================================\n");
-    printf ("                        DATA NASABAH                           |\n");
-    printf ("================================================================\n");
+    	printf ("                        DATA NASABAH                           |\n");
+    	printf ("================================================================\n");
 	
 	if(fp == NULL) {
 		printf ("\n\t\t    Data Tidak Ditemukan!\n\n");
@@ -309,8 +309,8 @@ void hapus(){
 	printf ("\n                         BANK SUNIB                            |\n");
 	printf ("                                                               |\n");
 	printf ("================================================================\n");
-    printf ("                       PENUTUPAN AKUN                          |\n");
-    printf ("================================================================\n");
+    	printf ("                       PENUTUPAN AKUN                          |\n");
+    	printf ("================================================================\n");
 	
 	fflush(stdin);
 	printf("Masukkan Nama Nasabah: "); scanf("%[^\n]s", name);
