@@ -3,7 +3,6 @@
 #include <string.h>
 #include <stdlib.h>
 #include <conio.h>
-#include <time.h>
 
 #define clear system("cls");
 #define ll long long
@@ -30,44 +29,45 @@ void hapus();
 //function main
 int main()
 {
-	int ch;
+	int option;
 	do{
-	clear
-	printf ("========================================\n");
-	printf ("                                       |");
-	printf ("\n     Selamat Datang di Bank Sunib      |\n");
-	printf ("                                       |\n");
-	printf ("========================================\n");
-	printf ("|1. TAMBAH AKUN\t\t\t       |\n");
-	printf ("|2. SETOR\t\t\t       |\n");
-	printf ("|3. TARIK\t\t\t       |\n");
-	printf ("|4. PRINT AKUN\t\t\t       |\n");
-	printf ("|5. HAPUS AKUN\t\t\t       |\n");
-	printf ("|0. KELUAR\t\t\t       |\n");
-	printf ("========================================\n");
-	printf("Silahkan pilih fitur yang tertera...\n");
-	printf("Masukkan pilihan anda: "); scanf("%d", &ch);
+		clear
+		printf ("========================================\n");
+		printf ("                                       |");
+		printf ("\n     Selamat Datang di Bank Sunib      |\n");
+		printf ("                                       |\n");
+		printf ("========================================\n");
+		printf ("|1. TAMBAH AKUN\t\t\t       |\n");
+		printf ("|2. SETOR\t\t\t       |\n");
+		printf ("|3. TARIK\t\t\t       |\n");
+		printf ("|4. PRINT AKUN\t\t\t       |\n");
+		printf ("|5. HAPUS AKUN\t\t\t       |\n");
+		printf ("|0. KELUAR\t\t\t       |\n");
+		printf ("========================================\n");
+		printf("Silahkan pilih fitur yang tertera...\n");
+		printf("Masukkan pilihan anda: "); scanf("%d", &option);
 	
-	switch(ch)
-	{
-		case 1:
-			add();
-			break;
-		case 2:
-			setor();
-			break;
-		case 3:
-			tarik();
-			break;
-		case 4:
-			print();
-			break;
-		case 5:
-			hapus();
-			break;
-	}
+		switch(option)
+		{
+			case 1:
+				add();
+				break;
+			case 2:
+				setor();
+				break;
+			case 3:
+				tarik();
+				break;
+			case 4:
+				print();
+				break;
+			case 5:
+				hapus();
+				break;
+		}
 	
-	} while(ch != 0);
+	} while(option != 0);
+		
 	printf ("\n=============TERIMA KASIH===============\n");
 	
 	return 0;
@@ -77,7 +77,6 @@ int main()
 void add(){
 	clear
 	nasabah s;
-	//s = (nasabah*)calloc(1, sizeof(nasabah));
 	fp = fopen("datanasabah.txt", "a");
 	printf ("================================================================\n");
 	printf ("                                                               |");
@@ -139,28 +138,25 @@ void setor(){
 	fflush(stdin);
 	printf("\nMasukkan Nama Nasabah\t\t: "); scanf("%[^\n]s", name);
 	while(fread(&s1, sizeof(nasabah),1,fp))	{
-		if(strcmp(s1.name, name) == 0) 
-			{
-				found = 1;
-				fflush(stdin);
-				printf("Masukkan Jumlah Setor Saldo\t: "); scanf("%lld", &saldoT);
+		if(strcmp(s1.name, name) == 0) {
+			found = 1;
+			fflush(stdin);
+			printf("Masukkan Jumlah Setor Saldo\t: "); scanf("%lld", &saldoT);
 				
-				if(saldoT < 100000 && saldoT % 50000!= 0)
-				{
-					printf("\nJumlah Yang Anda Input Salah!");
-					continue;
-				}
+			if(saldoT < 100000 || saldoT % 50000 != 0) {
+				found = 2;
+			} else {
 				s1.saldoA = s1.saldoA + saldoT;
-					
-			}
-			fwrite(&s1, sizeof(nasabah), 1, fpTemp);
+			}	
+		}
+		fwrite(&s1, sizeof(nasabah), 1, fpTemp);
 	}
 	//		CLOSE FILE
 	fclose(fp);
 	fclose(fpTemp);
 		
-	
-	if(found) {
+	//		PENGECEKAN KONDISI KETIKA DATA NASABAH DITEMUKAN
+	if (found == 1) {	
 		fpTemp = fopen("temp.txt", "r");
 		fp = fopen("datanasabah.txt", "w");
 			
@@ -173,10 +169,16 @@ void setor(){
 		getch();
 		fclose(fp);
 		fclose(fpTemp);
-	}			
-	else {
+	}
+	//		PENGECEKAN KONDISI KETIKA DATA NASABAH TIDAK DITEMUKAN
+	else if (found == 0) {
 		printf("\nData Nasabah Tidak Ditemukan!\n");
-		
+		printf("\nTekan ENTER Untuk Melanjutkan.\n");
+		getch();
+	}
+	//		PENGECEKAN KONDISI KETIKA INPUT SALDO TIDAK SESUAI SYARAT
+	else if (found == 2) {
+		printf("\nSaldo setor harus lebih dari Rp100,000 dan berkelipatan Rp50,000!\n");
 		printf("\nTekan ENTER Untuk Melanjutkan.\n");
 		getch();
 	}
@@ -216,27 +218,29 @@ void tarik(){
 	fflush(stdin);
 	printf("\nMasukkan Nama Nasabah\t\t: "); scanf("%[^\n]s", name);
 	while(fread(&s1, sizeof(nasabah),1,fp))	{
-		if(strcmp(s1.name, name) == 0) 
-			{
-				found = 1;
-				fflush(stdin);
-				printf("Masukkan Jumlah Tarik Saldo\t: "); scanf("%lld", &saldoT);
-			
-				if(saldoT > 5000000 && saldoT % 50000 != 0)
-				{
-					printf("\nJumlah Yang Anda Input Salah!");
-					continue;
-				}
+		if(strcmp(s1.name, name) == 0) {
+			found = 1;
+			fflush(stdin);
+			printf("Masukkan Jumlah Tarik Saldo\t: "); scanf("%lld", &saldoT);
+		
+			if (saldoT > 5000000) {
+				found = 2;
+			} 
+			else if (s1.saldoA < saldoT || s1.saldoA == 0) {
+				found = 3;
+			} 
+			else {
 				s1.saldoA = s1.saldoA - saldoT;
 			}
-			fwrite(&s1, sizeof(nasabah), 1, fpTemp);
+		}
+		fwrite(&s1, sizeof(nasabah), 1, fpTemp);
 	}
 	//		CLOSE FILE
 	fclose(fp);
 	fclose(fpTemp);
 		
-		
-	if(found) {
+	//		KONDISI JIKA DATA NASABAH DITEMUKAN
+	if(found == 1) {
 		fpTemp = fopen("temp.txt", "r");
 		fp = fopen("datanasabah.txt", "w");
 			
@@ -249,22 +253,34 @@ void tarik(){
 		getch();
 		fclose(fp);
 		fclose(fpTemp);
-	}			
-	else {
+	}	
+	//		KONDISI JIKA DATA NASABAH TIDAK DITEMUKAN		
+	else if (found == 0) {
 		printf("\nData Nasabah Tidak Ditemukan!\n");
-		
+		printf("\nTekan ENTER Untuk Melanjutkan.\n");
+		getch();
+	}
+	//		KONDISI JIKA SALDO INPUT TIDAK SESUAI SYARAT
+	else if (found == 2) {
+		printf ("\nSaldo yang ditarik (max. Rp5,000,000)!\n");
+		printf("\nTekan ENTER Untuk Melanjutkan.\n");
+		getch();
+	}
+	//		KONDISI JIKA SALDO YANG DITARIK LEBIH BESAR DARI SALDO SAAT INI
+	else if (found == 3) {
+		printf ("\nSaldo anda tidak mencukupi!\n");
 		printf("\nTekan ENTER Untuk Melanjutkan.\n");
 		getch();
 	}
 }
 
 
-//procedure print() untuk menampilkan data nasabah
+//procedure untuk menampilkan data nasabah diberi nama print();
 void print(){
-	clear
-	int index = 1;
-	nasabah s1;
-	fp = fopen("datanasabah.txt", "r");
+	clear	// untuk membersihkan terminal user interface, dengan menggunakan macro definition system("cls");
+	int user_count = 1;	// untuk mengidentifikasi penomoran setiap user
+	nasabah s1;	// mendeklarasi s1 sebagai struct nasabah
+	fp = fopen("datanasabah.txt", "r");	// membuka file 
 	printf ("================================================================\n");
 	printf ("                                                               |");
 	printf ("\n                         BANK SUNIB                            |\n");
@@ -279,20 +295,18 @@ void print(){
 	}
 	
 	while(fread(&s1, sizeof(nasabah), 1, fp)) {
-		printf("\nNasabah %d", index);
+		printf("\nNasabah %d", user_count);
 		printf("\nNama\t\t\t\t: %s\n", s1.name);
 		printf("No.HP\t\t\t\t: %s\n", s1.hp);
 		printf("Tanggal Pembuatan Rekening\t: %s\n", s1.date);
 		printf("Saldo Rekening\t\t\t: Rp%lld", s1.saldoA);
 		printf("\n");
-		index++;
+		user_count++;
 	}
 	
 	printf ("\n================================================================\n");
-	printf ("Total Nasabah : %d                                              |\n", index-1);
+	printf ("Total Nasabah : %d                                              |\n", (user_count - 1));
 	printf ("---------------------------------------------------------------|\n");
-	printf ("Tanggal       : %s                                    |\n", __DATE__);
-	printf ("Waktu         : %s                                       |\n", __TIME__);
 	printf ("================================================================\n");
 	printf ("\nTekan enter untuk melanjutkan!\n");
 	getch();
